@@ -6,11 +6,18 @@ import com.visu.account.rest.AccountRestService;
 
 public class App {
 
+    private static final int DEFAULT_PORT = 8080;
+
     public static void main(String[] args) throws Exception {
         Database database = new Database();
-        database.start();
+        Server server = new Server(getPort(), AccountRestService.class);
 
-        Server server = new Server(8080, AccountRestService.class);
+        database.start();
         server.start();
+    }
+
+    private static int getPort() {
+        String port = System.getProperty("port");
+        return port == null ? DEFAULT_PORT : Integer.valueOf(port);
     }
 }

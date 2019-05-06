@@ -16,8 +16,4 @@ public class AccountException extends RuntimeException {
     public static AccountException createWithAccountNotFound(Long id) {
         return new AccountException(ACCOUNT_NOT_FOUND + id);
     }
-
-    public static AccountException createWithNegativeBalance(Long id) {
-        return new AccountException(NEGATIVE_BALANCE + id);
-    }
 }

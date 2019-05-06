@@ -13,7 +13,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
 
         <third-party.guice-jersey.version>1.0.7</third-party.guice-jersey.version>
-        <third-party.jersey-jackson.version>2.28</third-party.jersey-jackson.version>
+        <third-party.jersey.version>2.28</third-party.jersey.version>
         <third-party.embedded-postgresql.version>0.13.1</third-party.embedded-postgresql.version>
         <third-party.postgresql-jdbc-driver.version>9.1-901.jdbc4</third-party.postgresql-jdbc-driver.version>
         <third-party.jooq.version>3.11.11</third-party.jooq.version>
@@ -21,6 +21,8 @@
         <third-party.logback.version>1.2.3</third-party.logback.version>
 
         <third-party.junit.version>4.12</third-party.junit.version>
+        <third-party.mockito.version>2.27.0</third-party.mockito.version>
+        <third-party.jersey-jetty-test.version>2.28</third-party.jersey-jetty-test.version>
     </properties>
 
     <dependencies>
@@ -32,7 +34,7 @@
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-jackson</artifactId>
-            <version>${third-party.jersey-jackson.version}</version>
+            <version>${third-party.jersey.version}</version>
         </dependency>
 
         <dependency>
@@ -80,104 +82,55 @@
             <version>${third-party.junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${third-party.mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.test-framework</groupId>
+            <artifactId>jersey-test-framework-core</artifactId>
+            <version>${third-party.jersey-jetty-test.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.test-framework.providers</groupId>
+            <artifactId>jersey-test-framework-provider-grizzly2</artifactId>
+            <version>${third-party.jersey-jetty-test.version}</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>10</source>
-                    <target>10</target>
-                </configuration>
+                <artifactId>maven-jar-plugin</artifactId>
             </plugin>
-
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>1.6</version>
+                <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
-                    <createDependencyReducedPom>true</createDependencyReducedPom>
-                    <filters>
-                        <filter>
-                            <artifact>*:*</artifact>
-                            <excludes>
-                                <exclude>META-INF/*.SF</exclude>
-                                <exclude>META-INF/*.DSA</exclude>
-                                <exclude>META-INF/*.RSA</exclude>
-                            </excludes>
-                        </filter>
-                    </filters>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.visu.account.App</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
                 </configuration>
-
                 <executions>
                     <execution>
+                        <id>make-assembly</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>shade</goal>
+                            <goal>single</goal>
                         </goals>
-                        <configuration>
-                            <transformers>
-                                <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
-                                <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <manifestEntries>
-                                        <Main-Class>com.visu.account.App</Main-Class>
-                                    </manifestEntries>
-                                </transformer>
-                            </transformers>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
-
-<!--            <plugin>
-                <groupId>org.jooq</groupId>
-                <artifactId>jooq-codegen-maven</artifactId>
-                <version>3.11.11</version>
-
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-
-                <dependencies>
-                    <dependency>
-                        <groupId>org.postgresql</groupId>
-                        <artifactId>postgresql</artifactId>
-                        <version>9.4.1212</version>
-                    </dependency>
-                </dependencies>
-
-                <configuration>
-                    <jdbc>
-                        <connection>org.postgresql.Driver</connection>
-                        <url>jdbc:postgresql:library</url>
-                        <user>postgres</user>
-                        <password>postgres</password>
-                    </jdbc>
-                    <generator>
-                        <database>
-                            <name>org.jooq.meta.postgres.PostgresDatabase</name>
-                            <includes>.*</includes>
-                            <inputSchema>public</inputSchema>
-                        </database>
-                        <generate>
-                            <daos>true</daos>
-                            <pojos>true</pojos>
-                        </generate>
-                        <target>
-                            <packageName>com.visu.account.generateded</packageName>
-                            <directory>target/generated-sources/jooq</directory>
-                        </target>
-                    </generator>
-                </configuration>
-            </plugin>-->
         </plugins>
     </build>
 

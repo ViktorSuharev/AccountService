@@ -11,7 +11,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Account {
-    private Long id;
+    private long id;
     private BigDecimal balance;
 
     @Override

@@ -6,13 +6,13 @@ import java.math.BigDecimal;
 
 public interface AccountService {
 
-    Account get(Long id);
+    Account get(long id);
 
     void add(Account account);
 
     void update(Account account);
 
-    void delete(Long id);
+    void delete(long id);
 
-    void transfer(Long senderId, Long receiverId, BigDecimal amount);
+    void transfer(long senderId, long receiverId, BigDecimal amount);
 }

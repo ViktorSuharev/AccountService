@@ -25,11 +25,19 @@ import static com.visu.account.rest.payload.PayloadFactory.createPayloadWithData
 @Produces({MediaType.APPLICATION_JSON})
 public class AccountRestService {
 
-    private final AccountService service = Guice.createInjector(new DiConfig()).getInstance(AccountService.class);
+    private final AccountService service;
+
+    public AccountRestService() {
+        this.service = Guice.createInjector(new DiConfig()).getInstance(AccountService.class);
+    }
+
+    public AccountRestService(AccountService service) {
+        this.service = service;
+    }
 
     @GET
     @Path("/{accountId}")
-    public Response get(@PathParam("accountId") Long accountId) {
+    public Response get(@PathParam("accountId") long accountId) {
         AccountPayload payload = createPayloadWithData(() -> service.get(accountId), "Account found");
 
         return createResponse(payload);

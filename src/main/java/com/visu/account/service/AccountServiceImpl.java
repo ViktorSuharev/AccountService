@@ -17,7 +17,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account get(Long id) {
+    public Account get(long id) {
         Account account = accountDao.get(id);
 
         if (account == null) {
@@ -42,7 +42,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(long id) {
         boolean success = accountDao.delete(id);
 
         if (!success) {
@@ -51,7 +51,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void transfer(Long senderId, Long receiverId, BigDecimal amount) {
+    public void transfer(long senderId, long receiverId, BigDecimal amount) {
         accountDao.transfer(senderId, receiverId, amount);
     }
 }

@@ -1,6 +1,7 @@
 package com.visu.account.dao;
 
 import com.google.inject.Inject;
+import com.visu.account.exception.AccountException;
 import com.visu.account.model.Account;
 import org.jooq.DSLContext;
 import org.jooq.Record;
@@ -20,7 +21,7 @@ public class JooqAccountDao implements AccountDao {
     }
 
     @Override
-    public Account get(Long id) {
+    public Account get(long id) {
         Record record = context
                 .select()
                 .from(Tables.ACCOUNTS)
@@ -50,7 +51,7 @@ public class JooqAccountDao implements AccountDao {
     }
 
     @Override
-    public boolean delete(Long id) {
+    public boolean delete(long id) {
         int result = context.delete(Tables.ACCOUNTS)
                 .where(Tables.ACCOUNTS.ID.eq(id))
                 .execute();
@@ -59,15 +60,31 @@ public class JooqAccountDao implements AccountDao {
     }
 
     @Override
-    public void transfer(Long senderId, Long receiverId, BigDecimal amount) {
+    public void transfer(long senderId, long receiverId, BigDecimal amount) {
         context.transaction(tr -> {
-            Account sender = get(senderId);
-            Account receiver = get(receiverId);
-
-            sender.setBalance(sender.getBalance().subtract(amount));
-            receiver.setBalance(receiver.getBalance().add(amount));
-            update(sender);
-            update(receiver);
+            withdraw(senderId, amount);
+            popUp(receiverId, amount);
         });
+    }
+
+    private void withdraw(long accountId, BigDecimal amount) {
+        Account account = getOrThrowException(accountId);
+        account.setBalance(account.getBalance().subtract(amount));
+        update(account);
+    }
+
+    private void popUp(long accountId, BigDecimal amount) {
+        Account account = getOrThrowException(accountId);
+        account.setBalance(account.getBalance().add(amount));
+        update(account);
+    }
+
+    private Account getOrThrowException(long accountId) {
+        Account account = get(accountId);
+        if (account == null) {
+            throw AccountException.createWithAccountNotFound(accountId);
+        }
+
+        return account;
     }
 }
