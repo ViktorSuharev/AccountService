@@ -11,13 +11,57 @@
     <properties>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
-        <server.jetty.version>9.4.12.v20180830</server.jetty.version>
-        <third-party.jersey.version>2.7</third-party.jersey.version>
+
+        <third-party.guice-jersey.version>1.0.7</third-party.guice-jersey.version>
+        <third-party.jersey-jackson.version>2.28</third-party.jersey-jackson.version>
+        <third-party.embedded-postgresql.version>0.13.1</third-party.embedded-postgresql.version>
+        <third-party.postgresql-jdbc-driver.version>9.1-901.jdbc4</third-party.postgresql-jdbc-driver.version>
+        <third-party.jooq.version>3.11.11</third-party.jooq.version>
         <third-party.lombok.version>1.18.6</third-party.lombok.version>
-        <third-party.guice.version>4.0</third-party.guice.version>
+        <third-party.logback.version>1.2.3</third-party.logback.version>
+
+        <third-party.junit.version>4.12</third-party.junit.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>io.logz</groupId>
+            <artifactId>guice-jersey</artifactId>
+            <version>${third-party.guice-jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+            <version>${third-party.jersey-jackson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${third-party.postgresql-jdbc-driver.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.opentable.components</groupId>
+            <artifactId>otj-pg-embedded</artifactId>
+            <version>${third-party.embedded-postgresql.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq</artifactId>
+            <version>${third-party.jooq.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-meta</artifactId>
+            <version>${third-party.jooq.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-codegen</artifactId>
+            <version>${third-party.jooq.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -25,36 +69,16 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.google.inject</groupId>
-            <artifactId>guice</artifactId>
-            <version>${third-party.guice.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.3.0</version>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${third-party.logback.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>jstl</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-            <version>${server.jetty.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-servlet</artifactId>
-            <version>${server.jetty.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-servlet-core</artifactId>
-            <version>${third-party.jersey.version}</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${third-party.junit.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -64,8 +88,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
+                    <source>10</source>
+                    <target>10</target>
                 </configuration>
             </plugin>
 
@@ -108,6 +132,52 @@
                     </execution>
                 </executions>
             </plugin>
+
+<!--            <plugin>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-codegen-maven</artifactId>
+                <version>3.11.11</version>
+
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>org.postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>9.4.1212</version>
+                    </dependency>
+                </dependencies>
+
+                <configuration>
+                    <jdbc>
+                        <connection>org.postgresql.Driver</connection>
+                        <url>jdbc:postgresql:library</url>
+                        <user>postgres</user>
+                        <password>postgres</password>
+                    </jdbc>
+                    <generator>
+                        <database>
+                            <name>org.jooq.meta.postgres.PostgresDatabase</name>
+                            <includes>.*</includes>
+                            <inputSchema>public</inputSchema>
+                        </database>
+                        <generate>
+                            <daos>true</daos>
+                            <pojos>true</pojos>
+                        </generate>
+                        <target>
+                            <packageName>com.visu.account.generateded</packageName>
+                            <directory>target/generated-sources/jooq</directory>
+                        </target>
+                    </generator>
+                </configuration>
+            </plugin>-->
         </plugins>
     </build>
 

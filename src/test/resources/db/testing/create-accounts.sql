@@ -1,0 +1,1 @@
+CREATE TABLE accounts (id bigint not null, balance numeric(10, 2) default null, primary key (id));
